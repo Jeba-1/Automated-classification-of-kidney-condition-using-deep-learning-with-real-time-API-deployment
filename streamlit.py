@@ -20,7 +20,7 @@ if uploaded_file is not None:
 
     if st.button("Predict"):
         files = {"files": ("image.png", img_bytes, "image/png")}
-        response = requests.post("https://your-fastapi-url.onrender.com/predict/", files=files)  # Replace with your API URL
+        response = requests.post("https://automated-classification-of-kidney.onrender.com/docs#/default/predict_predict__post", files=files)  # Replace with your API URL
         
         if response.status_code == 200:
             st.success(f"Prediction: {response.json()}")
