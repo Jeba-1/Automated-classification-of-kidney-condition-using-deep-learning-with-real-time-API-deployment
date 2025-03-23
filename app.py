@@ -162,7 +162,8 @@ async def predict(files: list[UploadFile] = File(...)):
             prediction = interpreter.get_tensor(output_details[0]['index'])
 
             # ✅ Get class with highest confidence
-            predicted_class = CLASS_INFO[np.argmax(prediction)]
+            predicted_index = int(np.argmax(prediction))  # ✅ Convert np.int64 to Python int
+            predicted_class = CLASS_INFO[predicted_index]  # ✅ Use converted int
             confidence = np.max(prediction) * 100  # Convert to percentage
 
             # ✅ Append results
