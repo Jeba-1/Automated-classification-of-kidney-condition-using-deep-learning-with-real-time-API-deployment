@@ -18,8 +18,8 @@ logging.basicConfig(level=logging.INFO)
 app = FastAPI()
 
 # ✅ Define Google Drive model link & local path
-MODEL_URL = "https://drive.google.com/uc?id=1c9Rsky1DmCUsHO-rTRfzejvZQ5nV8Ukh"
-MODEL_PATH = "Custom_CNN (1).h5"
+MODEL_URL = "https://drive.google.com/file/d/1H4L5fIq0AOXZpy66dq0zxhql4rR3iccm/view?usp=sharing"
+MODEL_PATH = "Custom_CNN.tflite"
 
 # ✅ Download model if not available
 if not os.path.exists(MODEL_PATH):
