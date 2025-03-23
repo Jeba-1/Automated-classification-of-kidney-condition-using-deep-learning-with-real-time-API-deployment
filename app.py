@@ -9,7 +9,6 @@ import gdown
 import io
 import os
 import uvicorn
-import nest_asyncio
 from google.colab import output
 import logging
 
@@ -19,8 +18,6 @@ logging.basicConfig(level=logging.INFO)
 # ✅ Initialize FastAPI app
 app = FastAPI()
 
-# ✅ Fix runtime issues in Colab
-nest_asyncio.apply()
 
 # ✅ Define Google Drive model link & local path
 MODEL_URL = "https://drive.google.com/uc?id=1c9Rsky1DmCUsHO-rTRfzejvZQ5nV8Ukh"
