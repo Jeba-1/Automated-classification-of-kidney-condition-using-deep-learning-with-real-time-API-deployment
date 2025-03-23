@@ -4,5 +4,3 @@ tensorflow
 pillow
 numpy
 gdown
-pyngrok
-
