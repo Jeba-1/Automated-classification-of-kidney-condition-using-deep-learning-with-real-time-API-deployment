@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 # ✅ Initialize FastAPI app
 app = FastAPI()
 
-# ✅ Define Google Drive model link & local path
-MODEL_URL = "https://drive.google.com/file/d/1H4L5fIq0AOXZpy66dq0zxhql4rR3iccm/view?usp=sharing"
+# ✅ Corrected Google Drive model link & local path
+MODEL_URL = "https://drive.google.com/uc?id=1H4L5fIq0AOXZpy66dq0zxhql4rR3iccm"
 MODEL_PATH = "Custom_CNN.tflite"
 
 # ✅ Download model if not available
@@ -26,10 +26,15 @@ if not os.path.exists(MODEL_PATH):
     print("📥 Downloading model from Google Drive...")
     gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
 
-# ✅ Load the trained model
-print("🧠 Loading model...")
-model = load_model(MODEL_PATH, compile=False)
+# ✅ Load TensorFlow Lite model
+print("🧠 Loading TensorFlow Lite model...")
+interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
+interpreter.allocate_tensors()
 print("✅ Model loaded successfully!")
+
+# ✅ Get input/output details
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 # ✅ Define class labels and details
 CLASS_INFO = {
     "Cyst": {
@@ -122,6 +127,11 @@ def home():
     return {"message": "Kidney Condition Classification API is running!"}
 
 # ✅ Multiple Image Prediction Endpoint
+@app.get("/")
+def home():
+    return {"message": "Kidney Condition Classification API is running!"}
+
+# ✅ Multiple Image Prediction Endpoint
 @app.post("/predict/")
 async def predict(files: list[UploadFile] = File(...)):
     results = []
@@ -142,13 +152,17 @@ async def predict(files: list[UploadFile] = File(...)):
 
             # ✅ Try opening the image
             img = Image.open(io.BytesIO(contents))
-            img.verify()  # Checks if it's a valid image
+            img.verify()  # Check if it's a valid image
             img = Image.open(io.BytesIO(contents))  # Reload image after verification
             img_array = preprocess_image(img)
 
-            # ✅ Make prediction
-            prediction = model.predict(img_array)
-            predicted_class = max(CLASS_INFO.keys(), key=lambda c: prediction[0][list(CLASS_INFO.keys()).index(c)])
+            # ✅ Make prediction with TFLite model
+            interpreter.set_tensor(input_details[0]['index'], img_array)
+            interpreter.invoke()
+            prediction = interpreter.get_tensor(output_details[0]['index'])
+
+            # ✅ Get class with highest confidence
+            predicted_class = CLASS_INFO[np.argmax(prediction)]
             confidence = np.max(prediction) * 100  # Convert to percentage
 
             # ✅ Append results
