@@ -77,10 +77,28 @@ def preprocess_image(img):
     img = img / 255.0  # Normalize pixel values
     return img.astype(np.float32)  # Ensure correct dtype
     
-# ✅ Home Route
-@app.get("/")
+from fastapi.responses import HTMLResponse
+
+@app.get("/", response_class=HTMLResponse)
 def home():
-    return {"message": "Kidney Condition Classification API is running!"}
+    return """
+    <html>
+    <head>
+        <title>Kidney Condition Classification API</title>
+        <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            h1 { color: #2c3e50; }
+            p { font-size: 18px; color: #34495e; }
+        </style>
+    </head>
+    <body>
+        <h1>🔬 Kidney Condition Classification API</h1>
+        <p>Upload kidney CT scan images, and our deep learning model will classify them.</p>
+        <p>✅ Supported formats: <b>JPG, JPEG, PNG</b></p>
+        <p>📄 API Documentation: <a href="/docs">Swagger UI</a> | <a href="/redoc">ReDoc</a></p>
+    </body>
+    </html>
+    """
     
 # ✅ Multiple Image Prediction Endpoint
 @app.post("/predict/")
