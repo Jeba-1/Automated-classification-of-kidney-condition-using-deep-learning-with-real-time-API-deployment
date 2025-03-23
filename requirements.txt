@@ -6,4 +6,4 @@ numpy
 gdown
 python-multipart
 streamlit
-opencv-python
+opencv-python-headless
