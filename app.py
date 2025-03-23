@@ -9,7 +9,6 @@ import gdown
 import io
 import os
 import uvicorn
-from google.colab import output
 import logging
 
 # ✅ Enable logging for debugging
@@ -17,7 +16,6 @@ logging.basicConfig(level=logging.INFO)
 
 # ✅ Initialize FastAPI app
 app = FastAPI()
-
 
 # ✅ Define Google Drive model link & local path
 MODEL_URL = "https://drive.google.com/uc?id=1c9Rsky1DmCUsHO-rTRfzejvZQ5nV8Ukh"
@@ -32,7 +30,6 @@ if not os.path.exists(MODEL_PATH):
 print("🧠 Loading model...")
 model = load_model(MODEL_PATH, compile=False)
 print("✅ Model loaded successfully!")
-
 # ✅ Define class labels and details
 CLASS_INFO = {
     "Cyst": {
@@ -173,5 +170,6 @@ async def predict(files: list[UploadFile] = File(...)):
 
 # ✅ Start the FastAPI server
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 8000))  # Render assigns a dynamic port
+    uvicorn.run(app, host="0.0.0.0", port=port)
     
