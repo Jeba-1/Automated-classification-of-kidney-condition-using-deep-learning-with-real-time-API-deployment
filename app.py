@@ -2,7 +2,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 import gdown
@@ -35,28 +34,17 @@ print("✅ Model loaded successfully!")
 # ✅ Get input/output details
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
-# ✅ Define class labels and details
+
+# ✅ Define class labels (ensure correct order)
+CLASS_LABELS = ["Cyst", "Normal", "Stone", "Tumor"]
+
+# ✅ Define class information (description, symptoms, etc.)
 CLASS_INFO = {
     "Cyst": {
         "description": "Cystic kidney disease involves fluid-filled sacs in the kidney that may require monitoring or treatment.",
-        "symptoms": [
-            "Pain in the back or side",
-            "High blood pressure",
-            "Frequent urination",
-            "Blood in urine"
-        ],
-        "diagnosis": [
-            "Ultrasound",
-            "CT scan",
-            "MRI",
-            "Kidney function tests"
-        ],
-        "treatment": [
-            "Regular monitoring with imaging tests",
-            "Medications for pain relief and blood pressure control",
-            "Drainage procedures for large cysts",
-            "Surgery in severe cases"
-        ]
+        "symptoms": ["Pain in the back or side", "High blood pressure", "Frequent urination", "Blood in urine"],
+        "diagnosis": ["Ultrasound", "CT scan", "MRI", "Kidney function tests"],
+        "treatment": ["Regular monitoring", "Medications", "Drainage procedures", "Surgery in severe cases"]
     },
     "Normal": {
         "description": "The kidney appears normal with no visible abnormalities.",
@@ -66,47 +54,15 @@ CLASS_INFO = {
     },
     "Stone": {
         "description": "Kidney stones are mineral deposits that may cause pain and require treatment.",
-        "symptoms": [
-            "Severe lower back or abdominal pain",
-            "Blood in urine",
-            "Frequent urge to urinate",
-            "Nausea and vomiting"
-        ],
-        "diagnosis": [
-            "CT scan",
-            "X-ray",
-            "Urine tests",
-            "Ultrasound"
-        ],
-        "treatment": [
-            "Increased water intake to help flush out small stones",
-            "Pain relievers",
-            "Medications to break down or pass stones",
-            "Shock wave therapy (ESWL) for larger stones",
-            "Surgical removal in severe cases"
-        ]
+        "symptoms": ["Severe back pain", "Blood in urine", "Frequent urge to urinate", "Nausea and vomiting"],
+        "diagnosis": ["CT scan", "X-ray", "Urine tests", "Ultrasound"],
+        "treatment": ["Increased water intake", "Pain relievers", "Shock wave therapy", "Surgical removal"]
     },
     "Tumor": {
         "description": "A kidney tumor might indicate malignancy or benign growth. Further testing is needed to determine the severity.",
-        "symptoms": [
-            "Blood in urine",
-            "Abdominal pain",
-            "Unexplained weight loss",
-            "Fatigue",
-            "Fever"
-        ],
-        "diagnosis": [
-            "CT scan",
-            "MRI",
-            "Biopsy",
-            "Blood tests"
-        ],
-        "treatment": [
-            "Surgical removal (nephrectomy for malignant tumors)",
-            "Targeted therapy or immunotherapy for cancerous tumors",
-            "Radiation therapy in some cases",
-            "Regular follow-up imaging"
-        ]
+        "symptoms": ["Blood in urine", "Abdominal pain", "Unexplained weight loss", "Fatigue", "Fever"],
+        "diagnosis": ["CT scan", "MRI", "Biopsy", "Blood tests"],
+        "treatment": ["Surgical removal", "Targeted therapy", "Radiation therapy", "Regular follow-ups"]
     }
 }
 
@@ -118,15 +74,10 @@ def preprocess_image(img):
     img = img.resize((224, 224))  # Resize to match model input
     img = image.img_to_array(img)
     img = np.expand_dims(img, axis=0)  # Add batch dimension
-    img = img / 255.0  # Normalize pixel values
+    img = np.array(img, dtype=np.float32) / 255.0  # Normalize pixel values
     return img
 
 # ✅ Home Route
-@app.get("/")
-def home():
-    return {"message": "Kidney Condition Classification API is running!"}
-
-# ✅ Multiple Image Prediction Endpoint
 @app.get("/")
 def home():
     return {"message": "Kidney Condition Classification API is running!"}
@@ -155,6 +106,10 @@ async def predict(files: list[UploadFile] = File(...)):
             img.verify()  # Check if it's a valid image
             img = Image.open(io.BytesIO(contents))  # Reload image after verification
             img_array = preprocess_image(img)
+
+            # ✅ Ensure correct input shape for model
+            img_array = img_array.reshape(input_details[0]['shape'])  
+
             # ✅ Make prediction with TFLite model
             interpreter.set_tensor(input_details[0]['index'], img_array)
             interpreter.invoke()
@@ -167,24 +122,32 @@ async def predict(files: list[UploadFile] = File(...)):
             if prediction is None or len(prediction) == 0:
                 raise HTTPException(status_code=500, detail="Model returned an empty prediction.")
 
+            # ✅ Convert logits to probabilities (if needed)
+            prediction = tf.nn.softmax(prediction).numpy()  # Ensure values are probabilities
+
             # ✅ Convert np.int64 to Python int before using it
             predicted_index = int(np.argmax(prediction))  # Fix int64 issue
-            predicted_class = CLASS_INFO[predicted_index]  # Ensure valid class label
+
+            # ✅ Ensure predicted index is within range
+            if predicted_index >= len(CLASS_LABELS):
+                raise HTTPException(status_code=500, detail="Model returned an invalid class index.")
+
+            # ✅ Convert index to class label
+            predicted_class = CLASS_LABELS[predicted_index]
+
+            # ✅ Get additional class info
             confidence = float(np.max(prediction)) * 100  # Convert confidence to float
-
-            # ✅ Debugging: Log predicted class
-            logging.info(f"✅ Predicted class: {predicted_class}, Confidence: {confidence:.2f}%")
-
+            class_details = CLASS_INFO[predicted_class]
 
             # ✅ Append results
             results.append({
                 "filename": filename,
                 "prediction": predicted_class,
                 "confidence": f"{confidence:.2f}%",
-                "description": CLASS_INFO[predicted_class]["description"],
-                "symptoms": CLASS_INFO[predicted_class]["symptoms"],
-                "diagnosis": CLASS_INFO[predicted_class]["diagnosis"],
-                "treatment": CLASS_INFO[predicted_class]["treatment"]
+                "description": class_details["description"],
+                "symptoms": class_details["symptoms"],
+                "diagnosis": class_details["diagnosis"],
+                "treatment": class_details["treatment"]
             })
 
         except Exception as e:
@@ -197,4 +160,5 @@ async def predict(files: list[UploadFile] = File(...)):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))  # Render assigns a dynamic port
     uvicorn.run(app, host="0.0.0.0", port=port)
+
     
