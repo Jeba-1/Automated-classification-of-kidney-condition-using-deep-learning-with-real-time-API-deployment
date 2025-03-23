@@ -6,3 +6,4 @@ numpy
 gdown
 python-multipart
 streamlit
+opencv-python
