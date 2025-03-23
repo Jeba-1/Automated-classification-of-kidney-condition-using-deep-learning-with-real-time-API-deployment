@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO)
 # ✅ Initialize FastAPI app
 app = FastAPI()
 
-# ✅ Corrected Google Drive model link & local path
+# ✅ Define Google Drive model link & local path
 MODEL_URL = "https://drive.google.com/uc?id=1H4L5fIq0AOXZpy66dq0zxhql4rR3iccm"
 MODEL_PATH = "Custom_CNN.tflite"
 
@@ -74,8 +74,8 @@ def preprocess_image(img):
     img = img.resize((224, 224))  # Resize to match model input
     img = image.img_to_array(img)
     img = np.expand_dims(img, axis=0)  # Add batch dimension
-    img = np.array(img, dtype=np.float32) / 255.0  # Normalize pixel values
-    return img
+    img = img / 255.0  # Normalize pixel values
+    return img.astype(np.float32)  # Ensure correct dtype
 
 # ✅ Home Route
 @app.get("/")
@@ -108,22 +108,16 @@ async def predict(files: list[UploadFile] = File(...)):
             img_array = preprocess_image(img)
 
             # ✅ Ensure correct input shape for model
-            img_array = img_array.reshape(input_details[0]['shape'])  
+            img_array = img_array.reshape(input_details[0]['shape']).astype(np.float32)
 
             # ✅ Make prediction with TFLite model
             interpreter.set_tensor(input_details[0]['index'], img_array)
             interpreter.invoke()
             prediction = interpreter.get_tensor(output_details[0]['index'])
 
-            # ✅ Debugging: Print the prediction output
-            logging.info(f"📊 Raw model output: {prediction}")
-
             # ✅ Ensure valid prediction output
             if prediction is None or len(prediction) == 0:
                 raise HTTPException(status_code=500, detail="Model returned an empty prediction.")
-
-            # ✅ Convert logits to probabilities (if needed)
-            prediction = tf.nn.softmax(prediction).numpy()  # Ensure values are probabilities
 
             # ✅ Convert np.int64 to Python int before using it
             predicted_index = int(np.argmax(prediction))  # Fix int64 issue
@@ -136,14 +130,12 @@ async def predict(files: list[UploadFile] = File(...)):
             predicted_class = CLASS_LABELS[predicted_index]
 
             # ✅ Get additional class info
-            confidence = float(np.max(prediction)) * 100  # Convert confidence to float
             class_details = CLASS_INFO[predicted_class]
 
-            # ✅ Append results
+            # ✅ Append results (WITHOUT confidence score)
             results.append({
                 "filename": filename,
                 "prediction": predicted_class,
-                "confidence": f"{confidence:.2f}%",
                 "description": class_details["description"],
                 "symptoms": class_details["symptoms"],
                 "diagnosis": class_details["diagnosis"],
