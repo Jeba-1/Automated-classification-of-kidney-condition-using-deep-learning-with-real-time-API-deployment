@@ -155,16 +155,26 @@ async def predict(files: list[UploadFile] = File(...)):
             img.verify()  # Check if it's a valid image
             img = Image.open(io.BytesIO(contents))  # Reload image after verification
             img_array = preprocess_image(img)
-
             # ✅ Make prediction with TFLite model
             interpreter.set_tensor(input_details[0]['index'], img_array)
             interpreter.invoke()
             prediction = interpreter.get_tensor(output_details[0]['index'])
 
-            # ✅ Get class with highest confidence
-            predicted_index = int(np.argmax(prediction))  # ✅ Convert np.int64 to Python int
-            predicted_class = CLASS_INFO[predicted_index]  # ✅ Use converted int
-            confidence = np.max(prediction) * 100  # Convert to percentage
+            # ✅ Debugging: Print the prediction output
+            logging.info(f"📊 Raw model output: {prediction}")
+
+            # ✅ Ensure valid prediction output
+            if prediction is None or len(prediction) == 0:
+                raise HTTPException(status_code=500, detail="Model returned an empty prediction.")
+
+            # ✅ Convert np.int64 to Python int before using it
+            predicted_index = int(np.argmax(prediction))  # Fix int64 issue
+            predicted_class = CLASS_INFO[predicted_index]  # Ensure valid class label
+            confidence = float(np.max(prediction)) * 100  # Convert confidence to float
+
+            # ✅ Debugging: Log predicted class
+            logging.info(f"✅ Predicted class: {predicted_class}, Confidence: {confidence:.2f}%")
+
 
             # ✅ Append results
             results.append({
