@@ -29,6 +29,6 @@ if uploaded_file is not None:
 
             if response.status_code == 200:
                 result = response.json()
-                st.success(f"Predicted Condition: {result['class']} (Confidence: {result['confidence']}%)")
+                st.success(f"Predicted Condition: {result['class']}")
             else:
                 st.error("Error in API request. Please try again.")
