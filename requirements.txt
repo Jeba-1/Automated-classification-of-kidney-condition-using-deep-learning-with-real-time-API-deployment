@@ -1,1 +1,8 @@
+fastapi
+uvicorn
+tensorflow
+pillow
+numpy
+gdown
+pyngrok
 
