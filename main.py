@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 
 # FastAPI Endpoint URL (Change this to your Render API URL)
-API_URL = "https://automated-classification-of-kidney.onrender.com"
+API_URL = "https://automated-classification-of-kidney.onrender.com/docs#/default/predict_predict__post"
 
 st.title("Kidney Condition Classification")
 
