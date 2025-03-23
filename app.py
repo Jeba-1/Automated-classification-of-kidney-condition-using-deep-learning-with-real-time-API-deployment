@@ -76,14 +76,12 @@ def preprocess_image(img):
     img = np.expand_dims(img, axis=0)  # Add batch dimension
     img = img / 255.0  # Normalize pixel values
     return img.astype(np.float32)  # Ensure correct dtype
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
-
+    
+# ✅ Home Route
 @app.get("/")
 def home():
-    return RedirectResponse(url="https://ofzxszxwfaiawxe65j9c46.streamlit.app/")  # Replace with your Streamlit URL
-
-
+    return {"message": "Kidney Condition Classification API is running!"}
+    
 # ✅ Multiple Image Prediction Endpoint
 @app.post("/predict/")
 async def predict(files: list[UploadFile] = File(...)):
