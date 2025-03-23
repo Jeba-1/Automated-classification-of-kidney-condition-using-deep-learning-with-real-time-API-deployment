@@ -4,3 +4,4 @@ tensorflow-cpu
 pillow
 numpy
 gdown
+python-multipart
