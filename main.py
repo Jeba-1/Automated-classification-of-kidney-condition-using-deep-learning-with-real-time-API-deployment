@@ -60,7 +60,7 @@ def generate_pdf(result, image):
     pdf.set_font("Times", style='B', size=14)
     pdf.cell(0, 5, "Predicted Condition:", ln=True)
     pdf.set_font("Times", size=12)
-    pdf.cell(0, 5, result['prediction'], ln=True, align='L')
+    pdf.cell(0, 7, result['prediction'], ln=True, align='L')
     pdf.ln(5)  # Space after prediction
 
     pdf.cell(0, 0, "", border='B')  # Horizontal line
