@@ -13,7 +13,7 @@ st.title("🔬 Automated Classification of Kidney Condition")
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 if uploaded_files:
-    for uploaded_file in uploaded_files:
+    for idx, uploaded_file in enumerate(uploaded_files):
     # Convert uploaded image to OpenCV format
         image = Image.open(uploaded_file)
         img_array = np.array(image)
@@ -22,7 +22,6 @@ if uploaded_files:
         st.image(image, caption="🖼️ Uploaded Image", use_column_width=True)
     
     # Convert image to bytes for API request
-    for idx, img_array in enumerate(image):
         _, img_encoded = cv2.imencode('.jpg', img_array)
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
