@@ -87,7 +87,7 @@ if uploaded_files:
         img_array = np.array(image)
 
         # Display the uploaded image
-        st.image(image, caption="🖼️ Uploaded Image", use_column_width=True)
+        st.image(image, caption="🖼️ Uploaded Image", use_container_width=True)
 
         # Convert image to bytes for API request
         _, img_encoded = cv2.imencode('.jpg', img_array)
