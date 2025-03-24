@@ -78,7 +78,9 @@ def preprocess_image(img):
     return img.astype(np.float32)  # Ensure correct dtype
     
 # ✅ Home Route
+# ✅ Home Route (supports GET and HEAD requests)
 @app.get("/")
+@app.head("/")  # ✅ Add this line to support HEAD requests
 def home():
     return {"message": "Kidney Condition Classification API is running!"}
     
