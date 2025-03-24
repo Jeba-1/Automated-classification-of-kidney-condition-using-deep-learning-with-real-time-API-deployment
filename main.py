@@ -16,13 +16,13 @@ uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["p
 
 class PDF(FPDF):
     def header(self):
-        self.set_font("Times New Roman", style='B', size=16)
+        self.set_font("Times", style='B', size=16)
         self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
         self.ln(10)
     
     def footer(self):
         self.set_y(-15)
-        self.set_font("Times New Roman", size=10)
+        self.set_font("Times", size=10)
         self.cell(0, 10, f"Page {self.page_no()}", align='C')
     
     def add_page(self, *args, **kwargs):
@@ -30,10 +30,10 @@ class PDF(FPDF):
         self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
     
     def add_section(self, title, content):
-        self.set_font("Times New Roman", style='B', size=12)
+        self.set_font("Times", style='B', size=12)
         self.cell(0, 10, title, ln=True)
         self.ln(5)
-        self.set_font("Times New Roman", size=12)
+        self.set_font("Times", size=12)
         self.multi_cell(0, 10, content)
         self.ln(2)
         self.cell(0, 0, "", border='B')  # Horizontal line
