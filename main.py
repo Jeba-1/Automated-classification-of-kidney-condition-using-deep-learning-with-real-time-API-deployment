@@ -14,61 +14,45 @@ st.title("🔬 Automated Classification of Kidney Condition")
 
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
+# Function to Generate PDF Report
 def generate_pdf(result, image):
-    pdf = FPDF()
+    pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     
-    # Save and add image to PDF first
+    # Title at the top
+    pdf.set_font("Times", style='B', size=16)
+    pdf.cell(0, 10, "Kidney Condition Classification Report", ln=True, align='C')
+    pdf.ln(5)
+    
+    # Save and add image to PDF
     image_path = "uploaded_image.jpg"
     image.save(image_path)
-    pdf.image(image_path, x=10, y=10, w=100)
-    pdf.ln(60)
-    
-    pdf.set_font("Arial", style='B', size=16)
-    pdf.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
-    pdf.ln(10)
-    
-    pdf.set_font("Arial", style='B', size=12)
+    pdf.image(image_path, x=40, y=25, w=130, h=100)
+    pdf.ln(110)  # Adjusted space after image
+
+    # Prediction section
+    pdf.set_font("Times", style='B', size=14)
     pdf.cell(0, 10, "Predicted Condition:", ln=True)
-    pdf.set_font("Arial", size=12)
-    pdf.cell(0, 10, result['prediction'], ln=True)
+    pdf.set_font("Times", size=14)
+    pdf.cell(0, 10, result['prediction'], ln=True, align='C')
+    pdf.ln(10)  # Space after prediction
+
+    pdf.cell(0, 0, "", border='B')  # Horizontal line
     pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
-    pdf.ln(5)
+
+    # Description
+    pdf.add_section("Description:", result['description'])
     
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.cell(0, 10, "Description:", ln=True)
-    pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, result['description'])
-    pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
-    pdf.ln(5)
-    
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.cell(0, 10, "Symptoms:", ln=True)
-    pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
-    pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
-    pdf.ln(5)
-    
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.cell(0, 10, "Diagnosis Methods:", ln=True)
-    pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
-    pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
-    pdf.ln(5)
-    
-    pdf.set_font("Arial", style='B', size=12)
-    pdf.cell(0, 10, "Treatment Options:", ln=True)
-    pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
-    pdf.ln(5)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
-    pdf.ln(10)
-    
+    # Symptoms
+    pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+
+    # Diagnosis Methods
+    pdf.add_section("Diagnosis Methods:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+
+    # Treatment Options
+    pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+
     return pdf
 
 if uploaded_files:
