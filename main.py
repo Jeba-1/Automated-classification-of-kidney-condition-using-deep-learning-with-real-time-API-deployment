@@ -18,38 +18,56 @@ def generate_pdf(result, image):
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
+    
+    # Save and add image to PDF first
+    image_path = "uploaded_image.jpg"
+    image.save(image_path)
+    pdf.image(image_path, x=10, y=10, w=100)
+    pdf.ln(60)
+    
     pdf.set_font("Arial", style='B', size=16)
     pdf.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
     pdf.ln(10)
     
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(0, 10, "Predicted Condition:", ln=True)
     pdf.set_font("Arial", size=12)
-    pdf.cell(0, 10, f"Predicted Condition: {result['prediction']}", ln=True)
-    pdf.ln(5)
-    
-    pdf.multi_cell(0, 10, f"Description: {result['description']}")
+    pdf.cell(0, 10, result['prediction'], ln=True)
     pdf.ln(5)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
     pdf.ln(5)
     
-    pdf.multi_cell(0, 10, "Symptoms:\n" + "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(0, 10, "Description:", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, result['description'])
     pdf.ln(5)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
     pdf.ln(5)
     
-    pdf.multi_cell(0, 10, "Diagnosis Methods:\n" + "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(0, 10, "Symptoms:", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
     pdf.ln(5)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
     pdf.ln(5)
     
-    pdf.multi_cell(0, 10, "Treatment Options:\n" + "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(0, 10, "Diagnosis Methods:", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.ln(5)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
+    pdf.ln(5)
+    
+    pdf.set_font("Arial", style='B', size=12)
+    pdf.cell(0, 10, "Treatment Options:", ln=True)
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
     pdf.ln(5)
     pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
     pdf.ln(10)
-    
-    # Save and add image to PDF
-    image_path = "uploaded_image.jpg"
-    image.save(image_path)
-    pdf.image(image_path, x=10, y=pdf.get_y() + 10, w=100)
     
     return pdf
 
