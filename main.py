@@ -14,21 +14,22 @@ st.title("🔬 Automated Classification of Kidney Condition")
 
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
+# PDF Class for Report Generation
 class PDF(FPDF):
     def header(self):
         self.set_font("Times", style='B', size=16)
         self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
         self.ln(5)
-    
+
     def footer(self):
         self.set_y(-15)
         self.set_font("Times", size=10)
         self.cell(0, 10, f"Page {self.page_no()}", align='C')
-    
+
     def add_page(self, *args, **kwargs):
         super().add_page(*args, **kwargs)
         self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
-    
+
     def add_section(self, title, content, space_after=3):
         self.set_font("Times", style='B', size=12)
         self.cell(0, 6, title, ln=True)
@@ -38,25 +39,43 @@ class PDF(FPDF):
         self.cell(0, 0, "", border='B')  # Horizontal line
         self.ln(3)
 
+# Function to Generate PDF Report
 def generate_pdf(result, image):
     pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     
-    # Save and add image to PDF after title
+    # Save and add image to PDF at the top
     image_path = "uploaded_image.jpg"
     image.save(image_path)
     pdf.image(image_path, x=40, y=30, w=130, h=100)
-    pdf.ln(8)  # Reduced space after image
-    
-    pdf.add_section("Predicted Condition:", result['prediction'], space_after=10)  # More space after prediction
+    pdf.ln(10)  # Small space after the image
+
+    # Prediction appears immediately after the image
+    pdf.set_font("Times", style='B', size=14)
+    pdf.cell(0, 10, "Predicted Condition:", ln=True)
+    pdf.set_font("Times", size=14)
+    pdf.cell(0, 10, result['prediction'], ln=True, align='C')  
+    pdf.ln(10)  # Space after prediction
+
+    pdf.cell(0, 0, "", border='B')  # Horizontal line
+    pdf.ln(5)
+
+    # Description
     pdf.add_section("Description:", result['description'])
-    pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
-    pdf.add_section("Diagnosis Methods:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
-    pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
     
+    # Symptoms
+    pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+
+    # Diagnosis Methods
+    pdf.add_section("Diagnosis Methods:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+
+    # Treatment Options
+    pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+
     return pdf
 
+# Streamlit UI Logic
 if uploaded_files:
     for idx, uploaded_file in enumerate(uploaded_files):
         # Convert uploaded image to OpenCV format
@@ -74,21 +93,22 @@ if uploaded_files:
         if f"prediction_{idx}" not in st.session_state:
             st.session_state[f"prediction_{idx}"] = None
 
-        # API call and display prediction immediately after the image
-        with st.spinner(f"⏳ Getting Prediction..."):
-            response = requests.post(API_URL, files=files)
-            if response.status_code == 200:
-                result = response.json()[0]  # Extract first item from response
-                st.session_state[f"prediction_{idx}"] = result
-            else:
-                st.error("❌ Error in API request. Please try again.")
+        if st.button(f"🔍 Classify {idx+1}", key=f"classify_{idx}"):
+            with st.spinner(f"⏳ Getting Predictions..."):
+                response = requests.post(API_URL, files=files)
 
-        # **Prediction appears immediately below the image**
+                if response.status_code == 200:
+                    result = response.json()[0]  # Extract first item from the response list
+                    st.session_state[f"prediction_{idx}"] = result  # Store result in session state
+                else:
+                    st.error("❌ Error in API request. Please try again.")
+
+        # If prediction exists, display it
         if st.session_state[f"prediction_{idx}"]:
             result = st.session_state[f"prediction_{idx}"]
             st.success(f"✅ **Predicted Condition:** {result['prediction']}")
 
-            # Additional details as buttons
+            # Buttons for additional details
             if st.button("📌 Description", key=f"desc_{idx}"):
                 st.info(result["description"])
             
@@ -100,7 +120,7 @@ if uploaded_files:
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
                 st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
-
+            
             # Download Report Button
             if st.button("📥 Download Report", key=f"download_{idx}"):
                 pdf = generate_pdf(result, image)
@@ -110,6 +130,6 @@ if uploaded_files:
                     data=pdf_output,
                     file_name="Kidney_Condition_Report.pdf",
                     mime="application/pdf"
-                )
+                )  
 
 
