@@ -25,10 +25,11 @@ if uploaded_files:
         _, img_encoded = cv2.imencode('.jpg', img_array)
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
-        if st.button(f"🔍 Classify"):
-            with st.spinner(f"⏳ Getting Predictions..."):
+        # "Classify" button without file name
+        if st.button("🔍 Classify"):
+            with st.spinner("⏳ Getting Predictions..."):
                 response = requests.post(API_URL, files=files)
-                
+
                 if response.status_code == 200:
                     result = response.json()[0]  # Extract first item from the response list
                     
@@ -37,7 +38,7 @@ if uploaded_files:
                     # Expandable sections for details
                     with st.expander("📌 Description"):
                         st.info(result["description"])
-                    
+                        
                     with st.expander("🩺 Symptoms"):
                         st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
 
@@ -49,7 +50,6 @@ if uploaded_files:
 
                 else:
                     st.error("❌ Error in API request. Please try again.")
-
 
 
 
