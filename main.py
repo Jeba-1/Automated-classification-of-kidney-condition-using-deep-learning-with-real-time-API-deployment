@@ -31,7 +31,7 @@ class PDF(FPDF):
         self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
 
     def add_section(self, title, content, space_after=3):
-        self.set_font("Times", style='B', size=12)
+        self.set_font("Times", style='B', size=14)
         self.cell(0, 6, title, ln=True)
         self.set_font("Times", size=12)
         self.multi_cell(0, 6, content)
@@ -59,7 +59,7 @@ def generate_pdf(result, image):
     # Prediction section
     pdf.set_font("Times", style='B', size=14)
     pdf.cell(0, 10, "Predicted Condition:", ln=True)
-    pdf.set_font("Times", size=14)
+    pdf.set_font("Times", size=12)
     pdf.cell(0, 10, result['prediction'], ln=True, align='L')
     pdf.ln(5)  # Space after prediction
 
