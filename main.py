@@ -22,11 +22,12 @@ if uploaded_files:
         st.image(image, caption="🖼️ Uploaded Image", use_column_width=True)
     
     # Convert image to bytes for API request
+    for idx, img_array in enumerate(images):
         _, img_encoded = cv2.imencode('.jpg', img_array)
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
         # "Classify" button without file name
-        if st.button(f"🔍 Classify"):
+        if st.button(f"🔍 Classify {idx+1}", key=f"classify_{idx}"):
             with st.spinner(f"⏳ Getting Predictions..."):
                 response = requests.post(API_URL, files=files)
 
