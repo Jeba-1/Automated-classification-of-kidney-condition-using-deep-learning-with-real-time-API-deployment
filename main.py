@@ -25,8 +25,8 @@ if uploaded_files:
         _, img_encoded = cv2.imencode('.jpg', img_array)
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
-        if st.button("🔍 Classify"):
-            with st.spinner("⏳ Getting Predictions..."):
+        if st.button(f"🔍 Classify{uploaded_file.name}"):
+            with st.spinner(f"⏳ Getting Predictions{uploaded_file.name}..."):
                 response = requests.post(API_URL, files=files)
                 
                 if response.status_code == 200:
