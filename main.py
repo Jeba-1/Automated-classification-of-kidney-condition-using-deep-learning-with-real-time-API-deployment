@@ -10,7 +10,7 @@ API_URL = "https://automated-classification-of-kidney.onrender.com/predict/"
 
 st.title("🔬 Automated Classification of Kidney Condition")
 
-uploaded_file = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
 if uploaded_file is not None:
     # Convert uploaded image to OpenCV format
