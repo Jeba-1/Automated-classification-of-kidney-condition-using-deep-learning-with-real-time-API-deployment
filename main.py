@@ -29,12 +29,12 @@ class PDF(FPDF):
         super().add_page(*args, **kwargs)
         self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
     
-    def add_section(self, title, content):
+    def add_section(self, title, content, space_after=3):
         self.set_font("Times", style='B', size=12)
         self.cell(0, 6, title, ln=True)
         self.set_font("Times", size=12)
         self.multi_cell(0, 6, content)
-        self.ln(3)
+        self.ln(space_after)
         self.cell(0, 0, "", border='B')  # Horizontal line
         self.ln(3)
 
@@ -47,12 +47,12 @@ def generate_pdf(result, image):
     image_path = "uploaded_image.jpg"
     image.save(image_path)
     pdf.image(image_path, x=40, y=30, w=130, h=100)
-    pdf.ln(100)
+    pdf.ln(10)  # Reduced space after image
     
-    pdf.add_section("Predicted Condition:", result['prediction'])
+    pdf.add_section("Predicted Condition:", result['prediction'], space_after=10)  # More space after prediction
     pdf.add_section("Description:", result['description'])
     pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
-    pdf.add_section("Diagnosis Measures:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.add_section("Diagnosis Methods:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
     pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
     
     return pdf
@@ -96,7 +96,7 @@ if uploaded_files:
             if st.button("🩺 Symptoms", key=f"symptoms_{idx}"):
                 st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
 
-            if st.button("🔬 Diagnosis Measures", key=f"diag_{idx}"):
+            if st.button("🔬 Diagnosis Methods", key=f"diag_{idx}"):
                 st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
