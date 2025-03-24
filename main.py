@@ -74,22 +74,21 @@ if uploaded_files:
         if f"prediction_{idx}" not in st.session_state:
             st.session_state[f"prediction_{idx}"] = None
 
-        if st.button(f"🔍 Classify {idx+1}", key=f"classify_{idx}"):
-            with st.spinner(f"⏳ Getting Predictions..."):
-                response = requests.post(API_URL, files=files)
+        # API call and display prediction immediately after the image
+        with st.spinner(f"⏳ Getting Prediction..."):
+            response = requests.post(API_URL, files=files)
+            if response.status_code == 200:
+                result = response.json()[0]  # Extract first item from response
+                st.session_state[f"prediction_{idx}"] = result
+            else:
+                st.error("❌ Error in API request. Please try again.")
 
-                if response.status_code == 200:
-                    result = response.json()[0]  # Extract first item from the response list
-                    st.session_state[f"prediction_{idx}"] = result  # Store result in session state
-                else:
-                    st.error("❌ Error in API request. Please try again.")
-
-        # If prediction exists, display it
+        # **Prediction appears immediately below the image**
         if st.session_state[f"prediction_{idx}"]:
             result = st.session_state[f"prediction_{idx}"]
             st.success(f"✅ **Predicted Condition:** {result['prediction']}")
 
-            # Buttons for additional details
+            # Additional details as buttons
             if st.button("📌 Description", key=f"desc_{idx}"):
                 st.info(result["description"])
             
@@ -101,7 +100,7 @@ if uploaded_files:
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
                 st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
-            
+
             # Download Report Button
             if st.button("📥 Download Report", key=f"download_{idx}"):
                 pdf = generate_pdf(result, image)
