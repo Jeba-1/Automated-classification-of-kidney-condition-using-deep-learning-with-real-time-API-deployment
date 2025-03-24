@@ -22,7 +22,7 @@ if uploaded_files:
         st.image(image, caption="🖼️ Uploaded Image", use_column_width=True)
     
     # Convert image to bytes for API request
-    for idx, img_array in enumerate(images):
+    for idx, img_array in enumerate(image):
         _, img_encoded = cv2.imencode('.jpg', img_array)
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
