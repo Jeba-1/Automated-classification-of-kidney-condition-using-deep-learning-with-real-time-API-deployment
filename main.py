@@ -4,6 +4,7 @@ import requests
 import cv2
 import numpy as np
 from PIL import Image
+from fpdf import FPDF
 
 # FastAPI Endpoint URL
 API_URL = "https://automated-classification-of-kidney.onrender.com/predict/"
@@ -11,6 +12,27 @@ API_URL = "https://automated-classification-of-kidney.onrender.com/predict/"
 st.title("🔬 Automated Classification of Kidney Condition")
 
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
+
+def generate_pdf(result):
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.add_page()
+    pdf.set_font("Arial", style='B', size=16)
+    pdf.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
+    pdf.ln(10)
+    
+    pdf.set_font("Arial", size=12)
+    pdf.cell(0, 10, f"Predicted Condition: {result['prediction']}", ln=True)
+    pdf.ln(5)
+    pdf.multi_cell(0, 10, f"Description: {result['description']}")
+    pdf.ln(5)
+    pdf.multi_cell(0, 10, "Symptoms:\n" + "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+    pdf.ln(5)
+    pdf.multi_cell(0, 10, "Diagnosis Methods:\n" + "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.ln(5)
+    pdf.multi_cell(0, 10, "Treatment Options:\n" + "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+    
+    return pdf
 
 if uploaded_files:
     for idx, uploaded_file in enumerate(uploaded_files):
@@ -56,6 +78,17 @@ if uploaded_files:
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
                 st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+            
+            # Download Report Button
+            if st.button("📥 Download Report", key=f"download_{idx}"):
+                pdf = generate_pdf(result)
+                pdf_output = pdf.output(dest='S').encode('latin1')
+                st.download_button(
+                    label="📄 Download Prediction Report as PDF",
+                    data=pdf_output,
+                    file_name="Kidney_Condition_Report.pdf",
+                    mime="application/pdf"
+                )
 
 
 
