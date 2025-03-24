@@ -8,9 +8,9 @@ from PIL import Image
 # FastAPI Endpoint URL
 API_URL = "https://automated-classification-of-kidney.onrender.com/predict/"
 
-st.title("🔬 Kidney Condition Classification")
+st.title("🔬 Automated Classification of Kidney Condition")
 
-uploaded_file = st.file_uploader("📤 Upload a Kidney CT Image", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
     # Convert uploaded image to OpenCV format
@@ -40,7 +40,7 @@ if uploaded_file is not None:
                 with st.expander("🩺 Symptoms"):
                     st.warning(", ".join(result["symptoms"]))
                     
-                with st.expander("🔬 Diagnosis Methods"):
+                with st.expander("🔬 Diagnosis Measures"):
                     st.success(", ".join(result["diagnosis"]))
                     
                 with st.expander("💊 Treatment Options"):
