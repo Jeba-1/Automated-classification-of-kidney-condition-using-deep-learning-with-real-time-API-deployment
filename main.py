@@ -25,22 +25,22 @@ class PDF(FPDF):
         self.set_font("Arial", size=10)
         self.cell(0, 10, f"Page {self.page_no()}", align='C')
     
-    def add_border(self):
-        self.rect(5.0, 5.0, 200.0, 287.0)  # Border for the page
+    def add_page_with_border(self):
+        self.add_page()
+        self.rect(5.0, 5.0, 200.0, 287.0)  # Border only for the outer page
     
     def add_section(self, title, content):
         self.set_font("Arial", style='B', size=12)
-        self.cell(0, 10, title, ln=True, border=1, align='C')
+        self.cell(0, 10, title, ln=True)
         self.ln(5)
         self.set_font("Arial", size=12)
-        self.multi_cell(0, 10, content, border=1)
+        self.multi_cell(0, 10, content)
         self.ln(5)
 
 def generate_pdf(result, image):
     pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
-    pdf.add_border()
+    pdf.add_page_with_border()
     
     # Save and add image to PDF after title
     image_path = "uploaded_image.jpg"
@@ -95,7 +95,7 @@ if uploaded_files:
             if st.button("🩺 Symptoms", key=f"symptoms_{idx}"):
                 st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
 
-            if st.button("🔬 Diagnosis Measures", key=f"diag_{idx}"):
+            if st.button("🔬 Diagnosis Methods", key=f"diag_{idx}"):
                 st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
