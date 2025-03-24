@@ -26,8 +26,8 @@ if uploaded_files:
         files = [("files", ("image.jpg", img_encoded.tobytes(), "image/jpeg"))]  
 
         # "Classify" button without file name
-        if st.button("🔍 Classify"):
-            with st.spinner("⏳ Getting Predictions..."):
+        if st.button(f"🔍 Classify"):
+            with st.spinner(f"⏳ Getting Predictions..."):
                 response = requests.post(API_URL, files=files)
 
                 if response.status_code == 200:
