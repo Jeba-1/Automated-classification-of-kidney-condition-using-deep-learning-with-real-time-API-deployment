@@ -51,7 +51,7 @@ if uploaded_files:
             if st.button("🩺 Symptoms", key=f"symptoms_{idx}"):
                 st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
 
-            if st.button("🔬 Diagnosis Methods", key=f"diag_{idx}"):
+            if st.button("🔬 Diagnosis Measures", key=f"diag_{idx}"):
                 st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
 
             if st.button("💊 Treatment Options", key=f"treat_{idx}"):
