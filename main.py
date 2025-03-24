@@ -17,8 +17,16 @@ uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["p
 class PDF(FPDF):
     def header(self):
         self.set_font("Arial", style='B', size=16)
-        self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C', border=1)
+        self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
         self.ln(10)
+    
+    def footer(self):
+        self.set_y(-15)
+        self.set_font("Arial", size=10)
+        self.cell(0, 10, f"Page {self.page_no()}", align='C')
+    
+    def add_border(self):
+        self.rect(5.0, 5.0, 200.0, 287.0)  # Border for the page
     
     def add_section(self, title, content):
         self.set_font("Arial", style='B', size=12)
@@ -32,11 +40,12 @@ def generate_pdf(result, image):
     pdf = PDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
+    pdf.add_border()
     
     # Save and add image to PDF after title
     image_path = "uploaded_image.jpg"
     image.save(image_path)
-    pdf.image(image_path, x=40, y=30, w=130, h=100, border=1)
+    pdf.image(image_path, x=40, y=30, w=130, h=100)
     pdf.ln(110)
     
     pdf.add_section("Predicted Condition:", result['prediction'])
@@ -102,5 +111,4 @@ if uploaded_files:
                     file_name="Kidney_Condition_Report.pdf",
                     mime="application/pdf"
                 )
-
 
