@@ -27,7 +27,7 @@ class PDF(FPDF):
     
     def add_page_with_border(self):
         self.add_page()
-        self.rect(5.0, 5.0, 200.0, 287.0)  # Border only for the outer page
+        self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
     
     def add_section(self, title, content):
         self.set_font("Arial", style='B', size=12)
@@ -35,6 +35,8 @@ class PDF(FPDF):
         self.ln(5)
         self.set_font("Arial", size=12)
         self.multi_cell(0, 10, content)
+        self.ln(2)
+        self.cell(0, 0, "", border='B')  # Horizontal line
         self.ln(5)
 
 def generate_pdf(result, image):
