@@ -54,14 +54,14 @@ def generate_pdf(result, image):
     image_path = "uploaded_image.jpg"
     image.save(image_path)
     pdf.image(image_path, x=40, y=25, w=130, h=100)
-    pdf.ln(110)  # Adjusted space after image
+    pdf.ln(10)  # Adjusted space after image
 
     # Prediction section
     pdf.set_font("Times", style='B', size=14)
     pdf.cell(0, 10, "Predicted Condition:", ln=True)
     pdf.set_font("Times", size=14)
     pdf.cell(0, 10, result['prediction'], ln=True, align='L')
-    pdf.ln(10)  # Space after prediction
+    pdf.ln(5)  # Space after prediction
 
     pdf.cell(0, 0, "", border='B')  # Horizontal line
     pdf.ln(5)
