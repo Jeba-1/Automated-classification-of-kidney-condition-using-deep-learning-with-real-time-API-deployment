@@ -1,3 +1,4 @@
+
 import streamlit as st
 import requests
 import cv2
@@ -31,20 +32,21 @@ if uploaded_file is not None:
                 result = response.json()[0]  # Extract first item from the response list
                 
                 st.success(f"✅ **Predicted Condition:** {result['prediction']}")
-                
-                # Expandable buttons for additional details
-                if st.button("📌 View Description"):
+
+                # Expandable sections for details
+                with st.expander("📌 Description"):
                     st.info(result["description"])
                     
-                if st.button("🩺 View Symptoms"):
+                with st.expander("🩺 Symptoms"):
                     st.warning(", ".join(result["symptoms"]))
                     
-                if st.button("🔬 View Diagnosis Methods"):
+                with st.expander("🔬 Diagnosis Methods"):
                     st.success(", ".join(result["diagnosis"]))
                     
-                if st.button("💊 View Treatment Options"):
+                with st.expander("💊 Treatment Options"):
                     st.error(", ".join(result["treatment"]))
 
             else:
                 st.error("❌ Error in API request. Please try again.")
+
 
