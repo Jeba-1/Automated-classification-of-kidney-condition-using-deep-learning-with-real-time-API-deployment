@@ -76,7 +76,7 @@ def generate_pdf(result, image):
     pdf.add_section("Diagnosis Measures:", "\n".join([f"* {diagnosis}" for diagnosis in result["diagnosis"]]))
 
     # Treatment Options
-    pdf.add_section("Treatment Options:", "\n".join([f"* {treatment}" for treatment in result["treatment"]]))
+    pdf.add_section("Treatment Suggestions:", "\n".join([f"* {treatment}" for treatment in result["treatment"]]))
 
     return pdf
 
@@ -122,7 +122,7 @@ if uploaded_files:
             if st.button("🔬 Diagnosis Measures", key=f"diag_{idx}"):
                 st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
 
-            if st.button("💊 Treatment Options", key=f"treat_{idx}"):
+            if st.button("💊 Treatment Suggestions", key=f"treat_{idx}"):
                 st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
             
             # Download Report Button
