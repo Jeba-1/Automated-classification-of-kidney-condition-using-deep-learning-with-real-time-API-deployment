@@ -14,6 +14,31 @@ st.title("🔬 Automated Classification of Kidney Condition")
 
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
+# PDF Class for Report Generation
+class PDF(FPDF):
+    def header(self):
+        self.set_font("Times", style='B', size=16)
+        self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
+        self.ln(5)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font("Times", size=10)
+        self.cell(0, 10, f"Page {self.page_no()}", align='C')
+
+    def add_page(self, *args, **kwargs):
+        super().add_page(*args, **kwargs)
+        self.rect(5.0, 5.0, 200.0, 287.0)  # Border for all pages
+
+    def add_section(self, title, content, space_after=3):
+        self.set_font("Times", style='B', size=12)
+        self.cell(0, 6, title, ln=True)
+        self.set_font("Times", size=12)
+        self.multi_cell(0, 6, content)
+        self.ln(space_after)
+        self.cell(0, 0, "", border='B')  # Horizontal line
+        self.ln(3)
+
 # Function to Generate PDF Report
 def generate_pdf(result, image):
     pdf = PDF()
