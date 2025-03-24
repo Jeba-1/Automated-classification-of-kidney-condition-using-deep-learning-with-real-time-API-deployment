@@ -73,7 +73,7 @@ def generate_pdf(result, image):
     pdf.add_section("Symptoms:", "\n".join([f"* {symptom}" for symptom in result["symptoms"]]))
 
     # Diagnosis Methods
-    pdf.add_section("Diagnosis Methods:", "\n".join([f"* {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.add_section("Diagnosis Measures:", "\n".join([f"* {diagnosis}" for diagnosis in result["diagnosis"]]))
 
     # Treatment Options
     pdf.add_section("Treatment Options:", "\n".join([f"* {treatment}" for treatment in result["treatment"]]))
