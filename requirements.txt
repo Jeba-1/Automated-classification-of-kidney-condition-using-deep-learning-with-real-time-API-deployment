@@ -7,3 +7,4 @@ gdown
 python-multipart
 streamlit
 opencv-python-headless
+fpdf
