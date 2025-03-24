@@ -47,7 +47,7 @@ def generate_pdf(result, image):
     image_path = "uploaded_image.jpg"
     image.save(image_path)
     pdf.image(image_path, x=40, y=30, w=130, h=100)
-    pdf.ln(10)  # Reduced space after image
+    pdf.ln(8)  # Reduced space after image
     
     pdf.add_section("Predicted Condition:", result['prediction'], space_after=10)  # More space after prediction
     pdf.add_section("Description:", result['description'])
@@ -112,4 +112,5 @@ if uploaded_files:
                     file_name="Kidney_Condition_Report.pdf",
                     mime="application/pdf"
                 )
+
 
