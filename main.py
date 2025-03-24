@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from fpdf import FPDF
+import io
 
 # FastAPI Endpoint URL
 API_URL = "https://automated-classification-of-kidney.onrender.com/predict/"
@@ -13,7 +14,7 @@ st.title("🔬 Automated Classification of Kidney Condition")
 
 uploaded_files = st.file_uploader("📤 Upload a Kidney CT Scan Image", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
 
-def generate_pdf(result):
+def generate_pdf(result, image):
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
@@ -24,13 +25,31 @@ def generate_pdf(result):
     pdf.set_font("Arial", size=12)
     pdf.cell(0, 10, f"Predicted Condition: {result['prediction']}", ln=True)
     pdf.ln(5)
+    
     pdf.multi_cell(0, 10, f"Description: {result['description']}")
     pdf.ln(5)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
+    pdf.ln(5)
+    
     pdf.multi_cell(0, 10, "Symptoms:\n" + "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
     pdf.ln(5)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
+    pdf.ln(5)
+    
     pdf.multi_cell(0, 10, "Diagnosis Methods:\n" + "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
     pdf.ln(5)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
+    pdf.ln(5)
+    
     pdf.multi_cell(0, 10, "Treatment Options:\n" + "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+    pdf.ln(5)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())  # Line separator
+    pdf.ln(10)
+    
+    # Save and add image to PDF
+    image_path = "uploaded_image.jpg"
+    image.save(image_path)
+    pdf.image(image_path, x=10, y=pdf.get_y() + 10, w=100)
     
     return pdf
 
@@ -81,7 +100,7 @@ if uploaded_files:
             
             # Download Report Button
             if st.button("📥 Download Report", key=f"download_{idx}"):
-                pdf = generate_pdf(result)
+                pdf = generate_pdf(result, image)
                 pdf_output = pdf.output(dest='S').encode('latin1')
                 st.download_button(
                     label="📄 Download Prediction Report as PDF",
@@ -89,6 +108,5 @@ if uploaded_files:
                     file_name="Kidney_Condition_Report.pdf",
                     mime="application/pdf"
                 )
-
 
 
