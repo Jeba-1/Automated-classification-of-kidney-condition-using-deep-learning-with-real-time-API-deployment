@@ -32,20 +32,22 @@ if uploaded_file is not None:
                 result = response.json()[0]  # Extract first item from the response list
                 
                 st.success(f"✅ **Predicted Condition:** {result['prediction']}")
+
+                # Expandable sections for details
+                with st.expander("📌 Description"):
+                    st.info(result["description"])
+                    
+                with st.expander("🩺 Symptoms"):
+                    st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+
+                with st.expander("🔬 Diagnosis Methods"):
+                    st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+
+                with st.expander("💊 Treatment Options"):
+                    st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+
             else:
                 st.error("❌ Error in API request. Please try again.")
-
-# Display stored results if classification has been done
-if st.session_state.classification_result:
-    result = st.session_state.classification_result  # Retrieve from session state
-    with st.expander("📌 Description"):
-        st.info(result["description"])
-    with st.expander("🩺 Symptoms"):
-        st.markdown("\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
-    with st.expander("🔬 Diagnosis Methods"):
-        st.markdown("\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
-    with st.expander("💊 Treatment Options"):
-        st.markdown("\n".join([f"- {treatment}" for treatment in result["treatment"]]))
 
 
 
