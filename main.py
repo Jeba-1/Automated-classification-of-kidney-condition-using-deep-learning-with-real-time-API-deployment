@@ -52,9 +52,9 @@ def generate_pdf(result, image):
     
     pdf.add_section("Predicted Condition:", result['prediction'])
     pdf.add_section("Description:", result['description'])
-    pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
-    pdf.add_section("Diagnosis Measures:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
-    pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
+    pdf.add_section("Symptoms:", "\n".join([f"* {symptom}" for symptom in result["symptoms"]]))
+    pdf.add_section("Diagnosis Measures:", "\n".join([f"* {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.add_section("Treatment Options:", "\n".join([f"* {treatment}" for treatment in result["treatment"]]))
     
     return pdf
 
