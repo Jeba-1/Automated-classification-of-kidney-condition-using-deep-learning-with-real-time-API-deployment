@@ -18,7 +18,7 @@ class PDF(FPDF):
     def header(self):
         self.set_font("Times", style='B', size=16)
         self.cell(200, 10, "Kidney Condition Classification Report", ln=True, align='C')
-        self.ln(10)
+        self.ln(5)
     
     def footer(self):
         self.set_y(-15)
@@ -31,13 +31,12 @@ class PDF(FPDF):
     
     def add_section(self, title, content):
         self.set_font("Times", style='B', size=12)
-        self.cell(0, 10, title, ln=True)
-        self.ln(5)
+        self.cell(0, 6, title, ln=True)
         self.set_font("Times", size=12)
-        self.multi_cell(0, 10, content)
-        self.ln(2)
+        self.multi_cell(0, 6, content)
+        self.ln(3)
         self.cell(0, 0, "", border='B')  # Horizontal line
-        self.ln(5)
+        self.ln(3)
 
 def generate_pdf(result, image):
     pdf = PDF()
@@ -48,13 +47,13 @@ def generate_pdf(result, image):
     image_path = "uploaded_image.jpg"
     image.save(image_path)
     pdf.image(image_path, x=40, y=30, w=130, h=100)
-    pdf.ln(110)
+    pdf.ln(100)
     
     pdf.add_section("Predicted Condition:", result['prediction'])
     pdf.add_section("Description:", result['description'])
-    pdf.add_section("Symptoms:", "\n".join([f"* {symptom}" for symptom in result["symptoms"]]))
-    pdf.add_section("Diagnosis Measures:", "\n".join([f"* {diagnosis}" for diagnosis in result["diagnosis"]]))
-    pdf.add_section("Treatment Options:", "\n".join([f"* {treatment}" for treatment in result["treatment"]]))
+    pdf.add_section("Symptoms:", "\n".join([f"- {symptom}" for symptom in result["symptoms"]]))
+    pdf.add_section("Diagnosis Measures:", "\n".join([f"- {diagnosis}" for diagnosis in result["diagnosis"]]))
+    pdf.add_section("Treatment Options:", "\n".join([f"- {treatment}" for treatment in result["treatment"]]))
     
     return pdf
 
