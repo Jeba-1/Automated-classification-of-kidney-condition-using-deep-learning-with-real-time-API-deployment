@@ -89,13 +89,13 @@ Model summary panel
 # 📸 Sample Visualizations
 
 ![image](https://github.com/user-attachments/assets/4fa34507-78c1-460c-b20c-028e8f4a3a74)
-Class distribution plot
+
 
 ![image](https://github.com/user-attachments/assets/6f4b93f1-01a4-41dc-8fea-369f203d5f86)
-Confusion matrix
+
 
 ![image](https://github.com/user-attachments/assets/94a4a6ff-beea-43ee-a2a4-ad17a9a1c62d)
-Training plot
+
 
 # 📦 Installation & Usage
 # Clone the repository
