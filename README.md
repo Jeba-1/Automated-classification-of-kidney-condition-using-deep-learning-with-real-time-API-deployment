@@ -92,6 +92,7 @@ Class distribution plot
 
 Confusion matrices
 ![image](https://github.com/user-attachments/assets/6f4b93f1-01a4-41dc-8fea-369f203d5f86)
+
 Training plot
 ![image](https://github.com/user-attachments/assets/94a4a6ff-beea-43ee-a2a4-ad17a9a1c62d)
 
