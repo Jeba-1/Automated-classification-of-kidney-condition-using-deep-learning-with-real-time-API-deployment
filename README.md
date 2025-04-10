@@ -3,7 +3,9 @@ This project focuses on classifying kidney conditions—Normal, Cyst, Stone, and
 
 🚀 Project Highlights
 1.✅ Multi-class classification: Normal, Cyst, Stone, Tumor
+
 2.🧠 Deep learning models (CNN, VGG16, Densenet201, InceptionV3, CNN-ViT Hybrid)
+
 3.📊 Real-time prediction with a clean UI (Streamlit)
 4.🔁 Feedback mechanism for continuous improvement
 5.🧪 Evaluation using accuracy, confusion matrix, and more
