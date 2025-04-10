@@ -2,57 +2,88 @@
 This project focuses on classifying kidney conditions—Normal, Cyst, Stone, and Tumor—using CT scan images and state-of-the-art deep learning techniques. Designed for real-time deployment, the system supports medical diagnostics by enabling automated and accurate disease detection through a web-based interface powered by Streamlit and a FastAPI backend.
 
 🚀 Project Highlights
-1.✅ Multi-class classification: Normal, Cyst, Stone, Tumor
+✅ Multi-class classification: Normal, Cyst, Stone, Tumor
 
-2.🧠 Deep learning models (CNN, VGG16, Densenet201, InceptionV3, CNN-ViT Hybrid)
+🧠 Deep learning models (CNN, VGG16, Densenet201, InceptionV3, CNN-ViT Hybrid)
 
-3.📊 Real-time prediction with a clean UI (Streamlit)
-4.🔁 Feedback mechanism for continuous improvement
-5.🧪 Evaluation using accuracy, confusion matrix, and more
-6.📦 Deployed using FastAPI for robust backend API
+📊 Real-time prediction with a clean UI (Streamlit)
+
+🔁 Feedback mechanism for continuous improvement
+
+🧪 Evaluation using accuracy, confusion matrix, and more
+
+📦 Deployed using FastAPI for robust backend API
 
 # 📁 Dataset
 Source: CT Kidney Dataset - Kaggle
 # Classes:
 1.Normal: 5,077 images
+
 2.Cyst: 3,709 images
+
 3.Tumor: 2,283 images
+
 4.Stone: 1,377 images
+
 Total: 12,446 CT scan images
 
 # 🧪 Model Pipeline
 Data Preprocessing
+
 Image labeling & augmentation
+
 Normalization & resizing
+
 Train-validation-test split
+
 Model Development
+
 Basic CNN
+
 Transfer Learning (VGG16, DenseNet201, InceptionV3)
+
 Hybrid model (CNN + ViT) inspired by research literature
+
 Training & Evaluation
+
 Accuracy, loss tracking
+
 Confusion matrix, precision, recall, F1
+
 Comparison of model performance
 
 # Deployment
 Backend: FastAPI
+
 Frontend: Streamlit Web App
+
 Real-time CT image classification
+
 
 # 🛠️ Technologies Used
 Python 3.11
+
 TensorFlow / Keras
+
 PyTorch (for ViT)
+
 OpenCV, NumPy, Matplotlib
+
 FastAPI (backend REST API)
+
 Streamlit (frontend web app)
+
 Kaggle API, Google Colab (experiments & training)
 
 # 🌐 Web App Features
 Upload CT scan image
+
 Predict kidney condition
+
 View prediction confidence
+
 Doctor/user feedback option
+
 Model summary panel
 
 # 📸 Sample Visualizations
@@ -61,6 +92,7 @@ Class distribution plot
 
 Confusion matrices
 ![image](https://github.com/user-attachments/assets/6f4b93f1-01a4-41dc-8fea-369f203d5f86)
+Training plot
 ![image](https://github.com/user-attachments/assets/94a4a6ff-beea-43ee-a2a4-ad17a9a1c62d)
 
 
