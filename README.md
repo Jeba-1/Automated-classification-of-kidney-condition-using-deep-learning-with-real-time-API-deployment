@@ -90,7 +90,7 @@ Model summary panel
 Class distribution plot
 ![image](https://github.com/user-attachments/assets/4fa34507-78c1-460c-b20c-028e8f4a3a74)
 
-Confusion matrices
+
 ![image](https://github.com/user-attachments/assets/6f4b93f1-01a4-41dc-8fea-369f203d5f86)
 
 Training plot
