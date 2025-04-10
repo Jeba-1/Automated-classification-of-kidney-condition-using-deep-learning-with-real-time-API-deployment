@@ -111,6 +111,8 @@ uvicorn api.main:app --reload
 # 📈 Results
 ![image](https://github.com/user-attachments/assets/3e1034f4-6616-4235-b9ed-7b73e01f2244)
 The app : https://automated-classification-of-kidney-condition-jp.streamlit.app/
+![image](https://github.com/user-attachments/assets/0c3bd790-d0bd-43f8-bfc9-c070f0229243)
+
 
 
 
