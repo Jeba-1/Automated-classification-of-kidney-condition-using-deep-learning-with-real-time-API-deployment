@@ -2,20 +2,20 @@
 This project focuses on classifying kidney conditions—Normal, Cyst, Stone, and Tumor—using CT scan images and state-of-the-art deep learning techniques. Designed for real-time deployment, the system supports medical diagnostics by enabling automated and accurate disease detection through a web-based interface powered by Streamlit and a FastAPI backend.
 
 🚀 Project Highlights
-*✅ Multi-class classification: Normal, Cyst, Stone, Tumor
-*🧠 Deep learning models (CNN, VGG16, Densenet201, InceptionV3, CNN-ViT Hybrid)
-*📊 Real-time prediction with a clean UI (Streamlit)
-*🔁 Feedback mechanism for continuous improvement
-*🧪 Evaluation using accuracy, confusion matrix, and more
-*📦 Deployed using FastAPI for robust backend API
+1.✅ Multi-class classification: Normal, Cyst, Stone, Tumor
+2.🧠 Deep learning models (CNN, VGG16, Densenet201, InceptionV3, CNN-ViT Hybrid)
+3.📊 Real-time prediction with a clean UI (Streamlit)
+4.🔁 Feedback mechanism for continuous improvement
+5.🧪 Evaluation using accuracy, confusion matrix, and more
+6.📦 Deployed using FastAPI for robust backend API
 
 # 📁 Dataset
 Source: CT Kidney Dataset - Kaggle
 # Classes:
-Normal: 5,077 images
-Cyst: 3,709 images
-Tumor: 2,283 images
-Stone: 1,377 images
+1.Normal: 5,077 images
+2.Cyst: 3,709 images
+3.Tumor: 2,283 images
+4.Stone: 1,377 images
 Total: 12,446 CT scan images
 
 # 🧪 Model Pipeline
